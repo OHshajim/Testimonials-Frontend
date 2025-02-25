@@ -1,3 +1,4 @@
+import Cards from "./Components/Cards";
 import { Filter } from "./Components/Filter";
 import { Search } from "./Components/Search";
 
@@ -7,6 +8,7 @@ const Page = () => {
       <text className="text-4xl font-medium ">Testimonials</text>
       <Search />
       <Filter />
+      <Cards />
     </div>
   );
 };
