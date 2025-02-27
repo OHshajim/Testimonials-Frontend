@@ -10,7 +10,7 @@ const ShowingSingleCard = ({
   return (
     <DialogContent className="sm:max-w-[950px] select-none">
       <div className="flex flex-col md:flex-row  items-center gap-5">
-        <img src="/public/profile.png" className="h-28 w-28" />
+        <img src="/profile.png" className="h-28 w-28" />
         <div className="space-y-1">
           <DialogTitle>
             <span className="font-medium">Traveler's Name :</span>{" "}
@@ -33,7 +33,7 @@ const ShowingSingleCard = ({
         <Rating style={{ maxWidth: 100 }} value={testimonial.rating} readOnly />
       </div>
       <div className=" flex flex-col">
-        <label className="text-2xl font-medium mb-3">
+        <label className="text-xl font-medium mb-3">
           Suggestions for future traveler(s):
         </label>
         <textarea

@@ -1,36 +1,32 @@
 import { useState } from "react";
 import Card from "./Card";
 import { Button } from "./ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "./ui/pagination";
 import ShowingSingleCard from "./ShowingSingleCard";
 import { Dialog, DialogTrigger } from "./ui/dialog";
 import { TestimonialDataType } from "@/Services/TestimonialTypes";
 import Post from "./Post/Post";
-import { useQuery } from "@tanstack/react-query";
 
-const Cards = () => {
+const Cards = ({
+  testimonials,
+  isLoading,
+}: {
+  testimonials: [];
+  isLoading: boolean;
+}) => {
   const [testimonial, setTest] = useState<TestimonialDataType | null>(null);
   const [updateOne, setUpdateOne] = useState<TestimonialDataType | null>(null);
-  const { data: testimonials, isLoading } = useQuery({
-    queryKey: ["testimonials"],
-    queryFn: async () => {
-      const response = await fetch("http://localhost:5000/testimonials");
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error("Failed to fetch testimonials");
-      }
-      return data.data;
-    },
-  });
+
+  const ModalClose = () => {
+    setTest(null);
+    setUpdateOne(null);
+  };
   if (isLoading) return;
+  if (testimonials.length < 1)
+    return (
+      <h3 className="text-center my-20 text-xl font-bold text-red-400">
+        No Data Available !!!
+      </h3>
+    );
   return (
     <div className="container mx-auto px-4">
       {/* Responsive Grid */}
@@ -55,43 +51,21 @@ const Cards = () => {
           </DialogTrigger>
           <Post type="POST" />
         </Dialog>
-        <Pagination>
-          <PaginationContent className="flex-wrap">
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
       </div>
 
       {/* Single Testimonial Modal */}
       {testimonial && (
-        <Dialog open={!!testimonial} onOpenChange={() => setTest(null)}>
+        <Dialog open={!!testimonial} onOpenChange={ModalClose}>
           <DialogTrigger asChild>
             <Button className="hidden">View Testimonial</Button>
           </DialogTrigger>
           <ShowingSingleCard testimonial={testimonial} />
         </Dialog>
       )}
+
+      {/* Update Modal */}
       {updateOne && (
-        <Dialog open={!!testimonial} onOpenChange={() => setTest(null)}>
+        <Dialog open={!!updateOne} onOpenChange={ModalClose}>
           <DialogTrigger asChild>
             <Button className="hidden">View Testimonial</Button>
           </DialogTrigger>

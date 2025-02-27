@@ -11,53 +11,130 @@ import {
 } from "./ui/select";
 import { Slider } from "./ui/slider";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { accommodations, destinations, TravelTags } from "@/Services/data";
+import { Input } from "./ui/input";
 
-export const Filter = () => {
-  const destinations = ["Bali", "Balli", "Baali"];
-  const ratings = [1, 2, 3, 4, 5];
-  const [budget, setBudget] = useState(200);
-  const [duration, setDuration] = useState(3);
-  const [sort, setSort] = useState(false);
+interface filterType {
+  setSelectedDestination: any;
+  setSelectedAccommodation: any;
+  setSelectedVibe: any;
+  setSelectedDate: any;
+  setSelectedRating: any;
+  setBudget: any;
+  setDuration: any;
+  setSort: any;
+  selectedAccommodation: string;
+  selectedVibe: string;
+  selectedDate: string;
+  selectedRating: string;
+  selectedDestination: string;
+  budget: number;
+  duration: number;
+  sort: boolean;
+}
 
+export const Filter = ({
+  setSelectedDestination,
+  setSelectedAccommodation,
+  setSelectedVibe,
+  setSelectedDate,
+  setSelectedRating,
+  setBudget,
+  setDuration,
+  setSort,
+  selectedAccommodation,
+  selectedVibe,
+  selectedDate,
+  selectedRating,
+  budget,
+  duration,
+  sort,
+  selectedDestination,
+}: filterType) => {
   const ResetAll = () => {
+    setSelectedDestination("");
+    setSelectedAccommodation("");
+    setSelectedVibe("");
+    setSelectedDate("");
+    setSelectedRating("");
     setBudget(200);
     setDuration(3);
     setSort(false);
   };
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="w-full flex flex-col gap-6 ">
       <div className="flex flex-wrap items-center justify-center gap-4">
-        {[
-          { label: "Destination", options: destinations },
-          { label: "Accommodation", options: destinations },
-          { label: "Travel Vibe", options: destinations },
-          { label: "Travel Date", options: destinations },
-        ].map(({ label, options }) => (
-          <Select key={label}>
-            <SelectTrigger className="w-full max-w-[250px]">
-              <SelectValue placeholder={label} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {options.map((option) => (
-                  <SelectItem key={option} value={option.toLowerCase()}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        ))}
-        {/* Ratings */}
-        <Select>
+        {/* Destination */}
+        <Select
+          onValueChange={setSelectedDestination}
+          value={selectedDestination}
+        >
           <SelectTrigger className="w-full max-w-[250px]">
+            <SelectValue placeholder="Destination" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {destinations.map((destination) => (
+                <SelectItem key={destination} value={destination}>
+                  {destination}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        {/* Accommodation */}
+        <Select
+          onValueChange={setSelectedAccommodation}
+          value={selectedAccommodation}
+        >
+          <SelectTrigger className="w-full max-w-[250px]">
+            <SelectValue placeholder="Accommodation" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {accommodations.map((accommodation) => (
+                <SelectItem key={accommodation} value={accommodation}>
+                  {accommodation}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        {/* Travel Vibe */}
+        <Select onValueChange={setSelectedVibe} value={selectedVibe}>
+          <SelectTrigger className="w-full max-w-[250px]">
+            <SelectValue placeholder="Travel Vibe" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {TravelTags.map((vibe) => (
+                <SelectItem key={vibe} value={vibe}>
+                  {vibe}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        {/* Travel Date */}
+        <Input
+          type="date"
+          className="w-full max-w-[250px] border rounded-md px-3 py-2"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
+
+        {/* Ratings */}
+        <Select onValueChange={setSelectedRating} value={selectedRating}>
+          <SelectTrigger className="w-full max-w-[250px] ">
             <SelectValue placeholder="Ratings" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {ratings.map((num) => (
+              {[1, 2, 3, 4, 5].map((num) => (
                 <SelectItem key={num} value={num.toString()}>
                   {num}
                 </SelectItem>
@@ -66,7 +143,9 @@ export const Filter = () => {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex md:flex-row flex-col w-full items-center  gap-6">
+
+      <div className="flex md:flex-row flex-col w-full items-center gap-6">
+        {/* Budget and Duration Sliders */}
         {[
           {
             label: "Budget",

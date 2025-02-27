@@ -21,8 +21,16 @@ import {
   transportationOptions,
   TravelTags,
 } from "@/Services/data";
+import { toast } from "sonner";
+import { TestimonialDataType } from "@/Services/TestimonialTypes";
+import { DialogClose } from "@radix-ui/react-dialog";
 
-const Post = ({ type, testimonial }: { type: string; testimonial?: any }) => {
+interface Post {
+  type: string;
+  testimonial?: TestimonialDataType;
+}
+
+const Post = ({ type, testimonial }: Post) => {
   const [duration, setDuration] = useState<number>(testimonial?.duration || 3);
   const handleIncrease = () => {
     if (duration < 14) {
@@ -42,14 +50,17 @@ const Post = ({ type, testimonial }: { type: string; testimonial?: any }) => {
     watch,
     formState: { errors },
   } = useForm({ defaultValues: testimonial });
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: TestimonialDataType) => {
     try {
       const formData = new FormData();
       formData.append("media", data.media[0]);
-      const res = await fetch("http://localhost:5000/MediaHosting", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://testimonials-backend-topaz.vercel.app/MediaHosting",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const responseData = await res.json();
       if (responseData.success) {
         const PostData = {
@@ -57,27 +68,43 @@ const Post = ({ type, testimonial }: { type: string; testimonial?: any }) => {
           media: responseData.HostingURL,
           rating,
         };
-        console.log(PostData);
-
-        const DataSave = await fetch("http://localhost:5000/testimonial", {
-          method: type,
-          body: JSON.stringify(PostData),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const DataSave = await fetch(
+          "https://testimonials-backend-topaz.vercel.app/testimonial",
+          {
+            method: type,
+            body: JSON.stringify(PostData),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const response = await DataSave.json();
 
         if (response.success) {
-          return alert("Success");
+          alert(
+            "Successfully done!Tank you so much for your valuable time !!!"
+          );
+          const closer = document.querySelector(
+            "[data-dialog-close]"
+          ) as HTMLButtonElement;
+          return closer.click();
         } else {
-          return alert("Failed to do something with this Infos of testimonial");
+          return alert("Please try again");
         }
       } else {
         console.error("Media upload failed:", responseData.message);
+        return alert("Please try again");
       }
     } catch (error) {
-      console.error("Error in submission:", error);
+      console.log(error);
+
+      return toast("Sorry, Try Again!!!", {
+        description: "Sorry for the internal error, please try again!",
+        action: {
+          label: "x",
+          onClick: () => console.log("x"),
+        },
+      });
     }
   };
 
@@ -487,7 +514,7 @@ const Post = ({ type, testimonial }: { type: string; testimonial?: any }) => {
             </div>
             {errors.socialHandle && (
               <span className="text-red-500">
-                {errors.socialMediaHandle.message as string}
+                {errors.socialHandle.message as string}
               </span>
             )}
           </div>
@@ -613,6 +640,7 @@ const Post = ({ type, testimonial }: { type: string; testimonial?: any }) => {
         <Button className="rounded-md w-full" type="submit">
           {type === "PUT" ? "Update Testimonial" : "Post"}
         </Button>
+        <DialogClose data-dialog-close className="hidden" />
       </form>
     </DialogContent>
   );
