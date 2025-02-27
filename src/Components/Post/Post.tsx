@@ -21,13 +21,9 @@ import {
   transportationOptions,
   TravelTags,
 } from "@/Services/data";
-import { TestimonialDataType } from "@/Services/TestimonialTypes";
-interface PostDataType {
-  type: string;
-  testimonial?: TestimonialDataType;
-}
-const Post = ({ type, testimonial }: PostDataType) => {
-  const [duration, setDuration] = useState<number>(3);
+
+const Post = ({ type, testimonial }: { type: string; testimonial?: any }) => {
+  const [duration, setDuration] = useState<number>(testimonial?.duration || 3);
   const handleIncrease = () => {
     if (duration < 14) {
       setDuration((prev) => prev + 1);
@@ -38,14 +34,14 @@ const Post = ({ type, testimonial }: PostDataType) => {
       setDuration((prev) => prev - 1);
     }
   };
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(testimonial?.duration || 5);
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues: testimonial });
   const onSubmit = async (data: any) => {
     try {
       const formData = new FormData();
@@ -61,20 +57,21 @@ const Post = ({ type, testimonial }: PostDataType) => {
           media: responseData.HostingURL,
           rating,
         };
+        console.log(PostData);
+
         const DataSave = await fetch("http://localhost:5000/testimonial", {
-          method: "POST",
+          method: type,
           body: JSON.stringify(PostData),
           headers: {
             "Content-Type": "application/json",
           },
         });
-
         const response = await DataSave.json();
 
         if (response.success) {
           return alert("Success");
         } else {
-          return alert("Failed to save testimonial");
+          return alert("Failed to do something with this Infos of testimonial");
         }
       } else {
         console.error("Media upload failed:", responseData.message);
@@ -255,7 +252,11 @@ const Post = ({ type, testimonial }: PostDataType) => {
                 required
               >
                 <SelectTrigger className="w-full max-w-[250px]">
-                  <SelectValue placeholder={"Travel type"} />
+                  <SelectValue
+                    placeholder={
+                      type === "PUT" ? testimonial?.travelType : "Travel type"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -322,7 +323,13 @@ const Post = ({ type, testimonial }: PostDataType) => {
                 required
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={"-select multiple options-"} />
+                  <SelectValue
+                    placeholder={
+                      type === "PUT"
+                        ? testimonial?.accommodations
+                        : "-select multiple options-"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -350,7 +357,13 @@ const Post = ({ type, testimonial }: PostDataType) => {
                 required
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={"-select multiple options-"} />
+                  <SelectValue
+                    placeholder={
+                      type === "PUT"
+                        ? testimonial?.transportUsed
+                        : "-select multiple options-"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -379,7 +392,13 @@ const Post = ({ type, testimonial }: PostDataType) => {
                 required
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={"-select multiple options-"} />
+                  <SelectValue
+                    placeholder={
+                      type === "PUT"
+                        ? testimonial?.activities
+                        : "-select multiple options-"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -427,7 +446,13 @@ const Post = ({ type, testimonial }: PostDataType) => {
                 required
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={"-select multiple options-"} />
+                  <SelectValue
+                    placeholder={
+                      type === "PUT"
+                        ? testimonial?.accommodations
+                        : "-select multiple options-"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -491,7 +516,6 @@ const Post = ({ type, testimonial }: PostDataType) => {
               <h4 className="text-nowrap">Media Type :</h4>
               <Select
                 onValueChange={(value) => setValue("mediaType", value)}
-                disabled={type === "PUT"}
                 required
               >
                 <SelectTrigger className="w-full max-w-[250px]">
@@ -587,7 +611,7 @@ const Post = ({ type, testimonial }: PostDataType) => {
           </div>
         </div>
         <Button className="rounded-md w-full" type="submit">
-          Post
+          {type === "PUT" ? "Update Testimonial" : "Post"}
         </Button>
       </form>
     </DialogContent>
