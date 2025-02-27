@@ -1,29 +1,20 @@
 import { Rating } from "@smastrom/react-rating";
-import "@smastrom/react-rating/style.css";
-import { Button } from "./ui/button";
-import { DialogContent, DialogFooter, DialogTitle } from "./ui/dialog";
-
-interface testimonialProps {
-  name: string;
-  country: string;
-  dateOfTravel: string;
-  favoriteExperience: string;
-  rating: number;
-}
+import { DialogContent, DialogTitle } from "./ui/dialog";
+import { TestimonialDataType } from "@/Services/TestimonialTypes";
 
 const ShowingSingleCard = ({
   testimonial,
 }: {
-  testimonial: testimonialProps;
+  testimonial: TestimonialDataType;
 }) => {
   return (
     <DialogContent className="sm:max-w-[950px] select-none">
-      <div className="flex  items-center gap-5">
+      <div className="flex flex-col md:flex-row  items-center gap-5">
         <img src="/public/profile.png" className="h-28 w-28" />
         <div className="space-y-1">
           <DialogTitle>
             <span className="font-medium">Traveler's Name :</span>{" "}
-            {testimonial.name}
+            {testimonial.TravelerName}
           </DialogTitle>
           <DialogTitle>
             <span className="font-medium">Date of Travel :</span>{" "}
@@ -48,11 +39,10 @@ const ShowingSingleCard = ({
         <textarea
           id="suggestion"
           className="col-span-3 border border-[#7099C8] focus:ring-[#7099C8] bg-transparent rounded-md p-2"
+          value={testimonial.suggestion}
+          disabled
         />
       </div>
-      <DialogFooter>
-        <Button type="submit">Save changes</Button>
-      </DialogFooter>
     </DialogContent>
   );
 };
