@@ -12,11 +12,11 @@ import {
 import { useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { FormDataType } from "@/Services/FormDataType";
+import { TestimonialDataType } from "@/Services/TestimonialTypes";
 
 interface TravelsDetailsProps {
   type: string;
-  initialData?: FormDataType;
+  initialData?: TestimonialDataType;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
 }
