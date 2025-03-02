@@ -21,7 +21,6 @@ import {
   transportationOptions,
   TravelTags,
 } from "@/Services/data";
-import { toast } from "sonner";
 import { TestimonialDataType } from "@/Services/TestimonialTypes";
 import { DialogClose } from "@radix-ui/react-dialog";
 
@@ -59,6 +58,9 @@ const Post = ({ type, testimonial }: Post) => {
         {
           method: "POST",
           body: formData,
+          headers: {
+            Accept: "application/json",
+          },
         }
       );
       const responseData = await res.json();
@@ -97,14 +99,6 @@ const Post = ({ type, testimonial }: Post) => {
       }
     } catch (error) {
       console.log(error);
-
-      return toast("Sorry, Try Again!!!", {
-        description: "Sorry for the internal error, please try again!",
-        action: {
-          label: "x",
-          onClick: () => console.log("x"),
-        },
-      });
     }
   };
 

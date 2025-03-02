@@ -23,7 +23,7 @@ const Card = ({
 
   return (
     <div
-      className="bg-white p-5 shadow-xl relative w-[300px] md:w-[400px] h-[500px] my-8 cursor-pointer"
+      className="bg-white p-5 shadow-xl relative  md:w-[400px] h-[500px] my-8 cursor-pointer"
       onClick={() => setTest(testimonial)}
     >
       <div className="flex justify-center w-full items-center mb-10 ">
@@ -36,7 +36,7 @@ const Card = ({
       <h3 className="text-base text-black text-center my-2">
         <span className="font-semibold">Traveler Name:</span> {TravelerName}
       </h3>
-      <img src={media} alt="testimonial image" className="w-full" />
+      <img src={media[0]} alt="testimonial image" className="w-full" />
       <div className="flex justify-between items-center my-2">
         <h3 className="px-3 bg-[#003B95] text-white font-medium rounded-full">
           {country}

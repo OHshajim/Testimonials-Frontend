@@ -2,6 +2,13 @@ import { Rating } from "@smastrom/react-rating";
 import { DialogContent, DialogTitle } from "./ui/dialog";
 import { TestimonialDataType } from "@/Services/TestimonialTypes";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode } from "swiper/modules";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/free-mode";
+
 const ShowingSingleCard = ({
   testimonial,
 }: {
@@ -26,6 +33,24 @@ const ShowingSingleCard = ({
           </DialogTitle>
         </div>
       </div>
+      <Swiper
+        spaceBetween={10}
+        freeMode={true}
+        modules={[FreeMode]}
+        className="mySwiper"
+        breakpoints={{
+          320: { slidesPerView: 1 },
+          720: { slidesPerView: 1.5 },
+          1024: { slidesPerView: 2.5 },
+        }}
+      >
+        {testimonial.media.map((med: string, index: number) => (
+          <SwiperSlide key={index}>
+            <img src={med} alt={`Testimonial image ${index}`} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
       <div className="flex flex-col ">
         <h3 className="px-3 my-2 bg-[#003B95] text-white font-medium rounded-full max-w-fit">
           {testimonial.country}
