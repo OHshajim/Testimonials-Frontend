@@ -19,6 +19,7 @@ const Card = ({
     rating,
     testimonial: description,
     media,
+    mediaType,
   } = testimonial;
 
   return (
@@ -36,7 +37,22 @@ const Card = ({
       <h3 className="text-base text-black text-center my-2">
         <span className="font-semibold">Traveler Name:</span> {TravelerName}
       </h3>
-      <img src={media[0]} alt="testimonial image" className="w-full" />
+      {mediaType === "photos" ? (
+        <img
+          src={media[0]}
+          alt="Testimonial image"
+          className="w-full h-auto rounded-md"
+        />
+      ) : mediaType === "videos" ? (
+        <video
+          src={media[0]}
+          autoPlay
+          controls
+          className="w-full h-auto rounded-md"
+        />
+      ) : (
+        <p className="text-red-500">Invalid media type</p>
+      )}
       <div className="flex justify-between items-center my-2">
         <h3 className="px-3 bg-[#003B95] text-white font-medium rounded-full">
           {country}

@@ -52,7 +52,12 @@ const Post = ({ type, testimonial }: Post) => {
   const onSubmit = async (data: TestimonialDataType) => {
     try {
       const formData = new FormData();
-      formData.append("media", data.media[0]);
+      const mediaFiles = Array.from(data.media);
+      mediaFiles.forEach((file) => {
+        formData.append("media", file);
+      });
+      console.log(formData);
+
       const res = await fetch(
         "https://testimonials-backend-topaz.vercel.app/MediaHosting",
         {
@@ -64,10 +69,11 @@ const Post = ({ type, testimonial }: Post) => {
         }
       );
       const responseData = await res.json();
+      console.log(responseData);
       if (responseData.success) {
         const PostData = {
           ...data,
-          media: responseData.HostingURL,
+          media: responseData.HostingURLs,
           rating,
         };
         const DataSave = await fetch(
@@ -544,7 +550,7 @@ const Post = ({ type, testimonial }: Post) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {["Photos", "Vedio", "Others"].map((option) => (
+                    {["Photos", "Videos", "Others"].map((option) => (
                       <SelectItem key={option} value={option.toLowerCase()}>
                         {option}
                       </SelectItem>
@@ -561,6 +567,7 @@ const Post = ({ type, testimonial }: Post) => {
                 })}
                 type="file"
                 className=" py-4 px-4 h-14"
+                multiple
               />
             </div>
             {errors.media && (
