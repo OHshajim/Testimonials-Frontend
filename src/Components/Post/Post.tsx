@@ -30,6 +30,7 @@ interface Post {
 }
 
 const Post = ({ type, testimonial }: Post) => {
+  const [isActive, setActive] = useState(true);
   const [duration, setDuration] = useState<number>(testimonial?.duration || 3);
   const handleIncrease = () => {
     if (duration < 14) {
@@ -51,6 +52,7 @@ const Post = ({ type, testimonial }: Post) => {
   } = useForm({ defaultValues: testimonial });
   const onSubmit = async (data: TestimonialDataType) => {
     try {
+      setActive(false);
       const formData = new FormData();
       const mediaFiles = Array.from(data.media);
       mediaFiles.forEach((file) => {
@@ -59,7 +61,8 @@ const Post = ({ type, testimonial }: Post) => {
       console.log(formData);
 
       const res = await fetch(
-        "https://testimonials-backend-topaz.vercel.app/MediaHosting",
+        // "http://localhost:5000/MediaHosting",
+        "https://testimonials-lac-nu.vercel.app/MediaHosting",
         {
           method: "POST",
           body: formData,
@@ -77,7 +80,7 @@ const Post = ({ type, testimonial }: Post) => {
           rating,
         };
         const DataSave = await fetch(
-          "https://testimonials-backend-topaz.vercel.app/testimonial",
+          "https://testimonials-lac-nu.vercel.app/testimonial",
           {
             method: type,
             body: JSON.stringify(PostData),
@@ -89,6 +92,7 @@ const Post = ({ type, testimonial }: Post) => {
         const response = await DataSave.json();
 
         if (response.success) {
+          setActive(true);
           alert(
             "Successfully done!Tank you so much for your valuable time !!!"
           );
@@ -97,13 +101,16 @@ const Post = ({ type, testimonial }: Post) => {
           ) as HTMLButtonElement;
           return closer.click();
         } else {
+          setActive(true);
           return alert("Please try again");
         }
       } else {
-        console.error("Media upload failed:", responseData.message);
-        return alert("Please try again");
+        setActive(true);
+        console.error("Media upload failed:", responseData);
+        return alert(responseData.error.message);
       }
     } catch (error) {
+      setActive(true);
       console.log(error);
     }
   };
@@ -559,7 +566,7 @@ const Post = ({ type, testimonial }: Post) => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 relative">
               <h4 className="text-nowrap">Upload media :</h4>
               <Input
                 {...register("media", {
@@ -568,7 +575,11 @@ const Post = ({ type, testimonial }: Post) => {
                 type="file"
                 className=" py-4 px-4 h-14"
                 multiple
+                size={5000}
               />
+              <p className="absolute top-5 right-4 text-xs text-[#003B95]">
+                max limit only 5 mb
+              </p>
             </div>
             {errors.media && (
               <span className="text-red-500">
@@ -638,7 +649,11 @@ const Post = ({ type, testimonial }: Post) => {
             )}
           </div>
         </div>
-        <Button className="rounded-md w-full" type="submit">
+        <Button
+          className="rounded-md w-full"
+          type="submit"
+          disabled={!isActive}
+        >
           {type === "PUT" ? "Update Testimonial" : "Post"}
         </Button>
         <DialogClose data-dialog-close className="hidden" />

@@ -59,7 +59,7 @@ const Page = () => {
       params.append("page", currentPage.toString());
 
       const response = await fetch(
-        `https://testimonials-backend-topaz.vercel.app/testimonials?${params.toString()}`
+        `https://testimonials-lac-nu.vercel.app/testimonials?${params.toString()}`
       );
       const data = await response.json();
 

@@ -1,7 +1,7 @@
 # Testimonials
 
 Live Link : https://teal-malasada-0a1afc.netlify.app/ <br/>
-Server site : https://testimonials-backend-topaz.vercel.app/
+Server site : https://testimonials-lac-nu.vercel.app/
 
 ### Technologies
 
